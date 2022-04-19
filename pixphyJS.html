@@ -1,0 +1,203 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <title>Pixel physics JS</title>  
+  <style>
+      #canvas {
+          border: 1px solid black;
+          display: block;
+          margin: 0 auto;
+          background: rgb(201, 171, 171);
+      }
+  </style>
+</head>
+<body>
+
+<canvas id="canvas" width="1280" height="720"></canvas>
+
+<script>
+const canvas = document.getElementById('canvas');
+const ctx = canvas.getContext('2d');
+
+const grid = 10;
+
+function sleep(ms) {
+  return new Promise(resolve => setTimeout(resolve, ms));
+}
+
+ctx.fillRect(550, 120, 16*grid, grid);
+ctx.fillRect(530, 130, 20*grid, grid);
+ctx.fillRect(510, 160, grid, 8*grid);
+ctx.fillRect(520, 140, grid, 13*grid);
+ctx.fillRect(530, 140, grid, grid);
+ctx.fillRect(530, 250, grid, 3*grid);
+ctx.fillRect(540, 270, grid, 2*grid);
+ctx.fillRect(550, 280, grid, 2*grid);
+ctx.fillRect(560, 290, grid, 2*grid);
+ctx.fillRect(570, 300, grid, 2*grid);
+ctx.fillRect(580, 310, grid, 2*grid);
+ctx.fillRect(590, 320, grid, 2*grid);
+ctx.fillRect(600, 330, grid, 3*grid);
+ctx.fillRect(610, 340, grid, 6*grid);
+
+ctx.fillRect(740, 160, grid, 8*grid);
+ctx.fillRect(730, 140, grid, 13*grid);
+ctx.fillRect(720, 140, grid, grid);
+ctx.fillRect(720, 250, grid, 3*grid);
+ctx.fillRect(710, 270, grid, 2*grid);
+ctx.fillRect(700, 280, grid, 2*grid);
+ctx.fillRect(690, 290, grid, 2*grid);
+ctx.fillRect(680, 300, grid, 2*grid);
+ctx.fillRect(670, 310, grid, 2*grid);
+ctx.fillRect(660, 320, grid, 2*grid);
+ctx.fillRect(650, 330, grid, 3*grid);
+ctx.fillRect(640, 340, grid, 6*grid);
+
+ctx.fillRect(510, 500, grid, 8*grid);
+ctx.fillRect(520, 470, grid, 13*grid);
+ctx.fillRect(530, 590, grid, grid);
+ctx.fillRect(530, 460, grid, 3*grid);
+ctx.fillRect(540, 450, grid, 2*grid);
+ctx.fillRect(550, 440, grid, 2*grid);
+ctx.fillRect(560, 430, grid, 2*grid);
+ctx.fillRect(570, 420, grid, 2*grid);
+ctx.fillRect(580, 410, grid, 2*grid);
+ctx.fillRect(590, 400, grid, 2*grid);
+ctx.fillRect(600, 380, grid, 3*grid);
+
+ctx.fillRect(740, 500, grid, 8*grid);
+ctx.fillRect(730, 470, grid, 13*grid);
+ctx.fillRect(720, 590, grid, grid);
+ctx.fillRect(720, 460, grid, 3*grid);
+ctx.fillRect(710, 450, grid, 2*grid);
+ctx.fillRect(700, 440, grid, 2*grid);
+ctx.fillRect(690, 430, grid, 2*grid);
+ctx.fillRect(680, 420, grid, 2*grid);
+ctx.fillRect(670, 410, grid, 2*grid);
+ctx.fillRect(660, 400, grid, 2*grid);
+ctx.fillRect(650, 380, grid, 3*grid);
+ctx.fillRect(530, 600, 20*grid, grid);
+ctx.fillRect(550, 610, 16*grid, grid);
+
+
+async function Fall() {  
+    
+    for (let i = 0; ctx.getImageData(coord[n][0], (coord[n][1] + 11), 1, 1).data[3] < 1; i++) {
+        
+        ctx.clearRect(coord[n][0], coord[n][1], grid, grid);
+        coord[n][1] += grid;
+        ctx.fillRect(coord[n][0], coord[n][1], grid, grid);
+        if (ctx.getImageData(coord[n][0], (coord[n][1] + 11), 1, 1).data[3] < 1) {await sleep(1);};        
+    }
+}
+
+async function Dodge() {
+
+    if (ctx.getImageData(coord[n][0], (coord[n][1] + 11), 1, 1).data[3] > 1) {
+       
+        if (ctx.getImageData((coord[n][0] + 11), (coord[n][1] + 11), 1, 1).data[3] < 1) {
+        ctx.clearRect(coord[n][0], coord[n][1], grid, grid);
+        coord[n][1] += grid;
+        coord[n][0] += grid;
+        ctx.fillRect(coord[n][0], coord[n][1], grid, grid);}
+
+    } else {Fall();}
+
+    if (ctx.getImageData(coord[n][0], (coord[n][1] + 11), 1, 1).data[3] > 1) {
+           
+       if (ctx.getImageData((coord[n][0] - 1), (coord[n][1] + 11), 1, 1).data[3] < 1) {
+       ctx.clearRect(coord[n][0], coord[n][1], grid, grid);
+       coord[n][1] += grid;
+       coord[n][0] -= grid;
+       ctx.fillRect(coord[n][0], coord[n][1], grid, grid);}
+
+    } else {Fall();}
+
+        if (n != 0) {
+            n -= 1;
+        } else {n = l};
+    
+        if (ctx.getImageData(coord[n][0], (coord[n][1] + 11), 1, 1).data[3] > 1) {
+            if (ctx.getImageData((coord[n][0] + 11), (coord[n][1] + 11), 1, 1).data[3] > 1) {
+                if (ctx.getImageData((coord[n][0] - 1), (coord[n][1] + 11), 1, 1).data[3] > 1) {
+                } else {await sleep(5);}
+            }
+        }
+        
+
+Dodge(); }
+
+function Draw() {
+
+    do {ctx.fillRect(coord[n][0], coord[n][1], grid, grid);
+    n += 1;}
+    while (n != l);
+}
+
+var w = 20;
+var h = 7;
+var x = 530;
+var y = 190;
+
+var coord = new Array(w * h);
+var t1 = 0;
+var t2 = 0;
+var u = 0;
+for (var i = 0; i < coord.length; i++) {
+    coord[i] = new Array(2);
+    coord[i][0] = x + (grid * t1);
+    coord[i][1] = y + (grid * t2);
+    t1++;
+    u = (i + 1) % w;
+    if (i != 0) {
+    if (u === 0) {
+        t2 += 1;
+        t1 = 0;
+    };};        
+}
+
+var w2 = 18;
+var h2 = 8;
+var x2 = 540;
+var y2 = 260;
+
+var d = 0;
+for (var i = 0; i < h2; i++) {
+    d += (w2 - 2 * i); 
+}
+
+var lp = coord.length;
+coord.length += d;
+var t1 = 0;
+var t2 = 0;
+var tt = 1;
+var u = 0;
+
+
+for (var i = lp; i < coord.length; i++) {
+    coord[i] = new Array(2);
+    coord[i][0] = x2 + (grid * t1);
+    coord[i][1] = y2 + (grid * t2);
+    t1++;
+    u = tt % (w2 - 1 * t2);
+    if (tt != 0) {
+    if (u === 0) {
+        t2 += 1;
+        t1 = 0 + t2;
+    };};        
+    tt++;
+}
+
+
+
+var l = coord.length - 1;
+var n = 0;
+Draw();
+n = l;
+Dodge();
+
+</script>
+
+</body>
+</html>
